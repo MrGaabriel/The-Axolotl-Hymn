@@ -4,6 +4,7 @@ import com.google.gson.*
 import me.mrgaabriel.axolotlhymn.*
 import me.mrgaabriel.axolotlhymn.commands.*
 import me.mrgaabriel.axolotlhymn.data.*
+import me.mrgaabriel.axolotlhymn.listeners.*
 import me.mrgaabriel.axolotlhymn.utils.*
 import net.dv8tion.jda.core.entities.*
 import java.io.*
@@ -34,9 +35,25 @@ class ReloadCommand : AbstractCommand(
             return
         }
 
+        if (arg0 == "listeners") {
+            AxolotlHymnLauncher.hymn.jda.registeredListeners.forEach {
+                AxolotlHymnLauncher.hymn.jda.removeEventListener(it)
+            }
+
+            AxolotlHymnLauncher.hymn.jda.addEventListener(MessageReceiver(AxolotlHymnLauncher.hymn))
+            message.channel.sendMessage("${message.author.asMention} Listeners recarregados com sucesso!").queue()
+            return
+        }
+
         val file = File("config.json")
         val config = Gson().fromJson(file.readText(Charsets.UTF_8), HymnConfig::class.java)
         AxolotlHymnLauncher.hymn.config = config
+
+        AxolotlHymnLauncher.hymn.jda.registeredListeners.forEach {
+            AxolotlHymnLauncher.hymn.jda.removeEventListener(it)
+        }
+
+        AxolotlHymnLauncher.hymn.jda.addEventListener(MessageReceiver(AxolotlHymnLauncher.hymn))
 
         AxolotlHymnLauncher.hymn.loadCommands()
 
