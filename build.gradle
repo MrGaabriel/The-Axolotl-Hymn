@@ -26,6 +26,12 @@ dependencies {
     compile "org.mongodb:mongo-java-driver:3.8.0"
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.mrgaabriel.axolotlhymn.AxolotlHymnLauncher'
+    }
+}
+
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
