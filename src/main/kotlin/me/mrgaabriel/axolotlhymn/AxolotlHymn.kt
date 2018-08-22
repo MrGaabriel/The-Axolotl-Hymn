@@ -22,6 +22,7 @@ class AxolotlHymn(var config: HymnConfig) {
             .setStatus(OnlineStatus.DO_NOT_DISTURB)
             .setGame(Game.streaming("Tommorrowland - (2019 - Winter) | t!help", "https://www.twitch.tv/MrGaabriel"))
             .setCorePoolSize(128)
+            .addEventListener(MessageReceiver())
 
     val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -29,7 +30,6 @@ class AxolotlHymn(var config: HymnConfig) {
         logger.info("Iniciando Axolotl Hymn!")
 
         jda = builder.buildBlocking()
-        jda.addEventListener(MessageReceiver())
 
         axolotl = jda.getGuildById("445377287043416075") ?: null
 
