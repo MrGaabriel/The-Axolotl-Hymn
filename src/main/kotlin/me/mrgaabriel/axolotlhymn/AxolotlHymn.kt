@@ -1,12 +1,19 @@
 package me.mrgaabriel.axolotlhymn
 
+import ch.qos.logback.classic.*
 import com.google.gson.*
+import com.mongodb.*
+import com.mongodb.MongoClient
+import com.mongodb.client.*
+import me.mrgaabriel.axolotlhymn.bson.*
 import me.mrgaabriel.axolotlhymn.commands.*
 import me.mrgaabriel.axolotlhymn.data.*
 import me.mrgaabriel.axolotlhymn.listeners.*
 import me.mrgaabriel.axolotlhymn.utils.*
 import net.dv8tion.jda.core.*
 import net.dv8tion.jda.core.entities.*
+import org.bson.codecs.configuration.*
+import org.bson.codecs.pojo.*
 import org.slf4j.*
 import java.io.*
 
@@ -22,12 +29,20 @@ class AxolotlHymn(var config: HymnConfig) {
             .setStatus(OnlineStatus.DO_NOT_DISTURB)
             .setGame(Game.streaming("Tommorrowland - (2019 - Winter) | t!help", "https://www.twitch.tv/MrGaabriel"))
             .setCorePoolSize(128)
-            .addEventListener(MessageReceiver())
+            .addEventListener(MessageReceiver(this))
+
+    lateinit var mongo: MongoClient
+    lateinit var database: MongoDatabase
+
+    lateinit var usersColl: MongoCollection<UserProfile>
 
     val logger = LoggerFactory.getLogger(this::class.java)
 
     fun start() {
         logger.info("Iniciando Axolotl Hymn!")
+
+        loadCommands()
+        loadMongo()
 
         jda = builder.buildBlocking()
 
@@ -44,8 +59,6 @@ class AxolotlHymn(var config: HymnConfig) {
         )
 
         messages.forEach { logger.info(it) }
-
-        loadCommands()
     }
 
     fun loadCommands() {
@@ -65,6 +78,24 @@ class AxolotlHymn(var config: HymnConfig) {
                 }
             }
         }
+    }
+
+    fun loadMongo() {
+        val context = LoggerFactory.getILoggerFactory() as LoggerContext
+        context.getLogger("org.mongodb.driver").level = Level.OFF
+
+        val pojo = CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
+                CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()))
+
+        val options = MongoClientOptions.builder()
+                .codecRegistry(pojo)
+                .maxConnectionLifeTime(2500)
+                .build()
+
+        mongo = MongoClient("localhost:27017", options)
+        database = mongo.getDatabase("axolotl-hymn")
+
+        usersColl = database.getCollection("users", UserProfile::class.java)
     }
 }
 
