@@ -40,7 +40,7 @@ class ProfileCommand : AbstractCommand(
             setAuthor(user.name + "#" + user.discriminator, null, user.effectiveAvatarUrl)
             setTitle("${user.name} - Perfil")
 
-            setDescription("**Sobre:** `${profile.about}`")
+            setDescription("`${profile.about}`")
 
             addField("XP", profile.xp.toString(), true)
             addField("Clyns", profile.money.toString(), true)
