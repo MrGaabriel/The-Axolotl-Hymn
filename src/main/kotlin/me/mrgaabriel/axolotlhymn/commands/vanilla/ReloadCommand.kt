@@ -16,6 +16,11 @@ class ReloadCommand : AbstractCommand(
 ) {
 
     override fun run(message: Message, args: Array<String>) {
+        if (!AxolotlHymnLauncher.hymn.config.owners.contains(message.author.id)) {
+            message.channel.sendMessage("${message.author.asMention} **Sem permissão!**").queue()
+            return
+        }
+
         val arg0 = args[0].toLowerCase()
 
         if (arg0 == "commands") {
