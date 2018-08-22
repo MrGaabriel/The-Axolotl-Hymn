@@ -10,7 +10,9 @@ class UserProfile @BsonCreator constructor(
     val id = _id
 
     var xp = 0
+
     var rep = 0
+    var lastUsedRep = 0.toLong()
 
     var money = 0
 

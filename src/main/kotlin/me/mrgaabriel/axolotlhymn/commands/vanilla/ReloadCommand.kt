@@ -50,6 +50,13 @@ class ReloadCommand : AbstractCommand(
             return
         }
 
+        if (arg0 == "mongo") {
+            AxolotlHymnLauncher.hymn.loadMongo()
+
+            message.channel.sendMessage("${message.author.asMention} MongoDB recarregado com sucesso!").queue()
+            return
+        }
+
         val file = File("config.json")
         val config = Gson().fromJson(file.readText(Charsets.UTF_8), HymnConfig::class.java)
         AxolotlHymnLauncher.hymn.config = config
@@ -60,6 +67,7 @@ class ReloadCommand : AbstractCommand(
 
         AxolotlHymnLauncher.hymn.jda.addEventListener(MessageReceiver(AxolotlHymnLauncher.hymn))
 
+        AxolotlHymnLauncher.hymn.loadMongo()
         AxolotlHymnLauncher.hymn.loadCommands()
 
         message.channel.sendMessage("${message.author.asMention} Bot recarregado com sucesso!").queue()
