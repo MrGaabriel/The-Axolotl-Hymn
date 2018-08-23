@@ -2,9 +2,12 @@ package me.mrgaabriel.axolotlhymn.commands.vanilla
 
 import com.mongodb.client.model.*
 import me.mrgaabriel.axolotlhymn.*
+import me.mrgaabriel.axolotlhymn.AxolotlHymnLauncher.hymn
 import me.mrgaabriel.axolotlhymn.bson.*
 import me.mrgaabriel.axolotlhymn.commands.*
+import me.mrgaabriel.axolotlhymn.utils.*
 import net.dv8tion.jda.core.entities.*
+import org.apache.commons.lang3.*
 
 class ManageCommand : AbstractCommand(
         "manage"
@@ -49,6 +52,14 @@ class ManageCommand : AbstractCommand(
                     ReplaceOptions().upsert(true)
             )
 
+            message.channel.sendMessage(":small_blue_diamond: **|** ${message.author.asMention} Sucesso!").queue()
+        }
+
+        if (arg0 == "set_game") {
+            val type = Game.GameType.valueOf(args[1])
+            val name = args.remove(0).remove(0).joinToString(" ")
+
+            hymn.jda.presence.game = Game.of(type, name, "https://www.twitch.tv/MrGaabriel")
             message.channel.sendMessage(":small_blue_diamond: **|** ${message.author.asMention} Sucesso!").queue()
         }
     }

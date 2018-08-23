@@ -1,5 +1,6 @@
 package me.mrgaabriel.axolotlhymn.utils
 
+import org.apache.commons.lang3.*
 import java.awt.*
 import java.io.File
 import java.util.ArrayList
@@ -71,4 +72,8 @@ object HymnUtils {
             return null
         }
     }
+}
+
+fun Array<String>.remove(idx: Int): Array<String> {
+    return ArrayUtils.remove(this, idx)
 }
