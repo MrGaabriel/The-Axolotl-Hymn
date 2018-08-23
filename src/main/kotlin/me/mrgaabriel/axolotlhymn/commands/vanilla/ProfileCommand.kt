@@ -49,7 +49,7 @@ class ProfileCommand : AbstractCommand(
             addField("XP", profile.xp.toString(), true)
             addField("Clyns", profile.money.toString(), true)
             addField("Reputação", profile.rep.toString(), true)
-            addField("Cargo", message.guild.getMember(user).roles.get(0).name, true)
+            addField("Casado com", if (!profile.marriedUser.isEmpty()) "<@${profile.marriedUser}>" else "Ninguém! :shrug:", true)
         }
 
         message.channel.sendMessage(builder.build()).queue()
