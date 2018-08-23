@@ -22,13 +22,19 @@ class BackgroundCommand : AbstractCommand(
             val attachment = message.attachments.first()
 
             if (attachment.isImage) {
-                message.channel.sendMessage(":small_blue_diamond: **|** ${message.author.asMention} Background trocado com sucesso!").queue()
+                if (profile.money < 200) {
+                    message.channel.sendMessage(":money_with_wings: **|** ${message.author.asMention} Você não tem Clyns suficientes!").queue()
+                    return
+                }
 
+                profile.money -= 200
                 profile.backgroundUrl = attachment.url
                 AxolotlHymnLauncher.hymn.usersColl.replaceOne(
                         Filters.eq("_id", message.author.id),
                         profile
                 )
+
+                message.channel.sendMessage(":small_blue_diamond: **|** ${message.author.asMention} Background trocado com sucesso!\n:money_with_wings: **|** -200 Clyns!").queue()
             } else {
                 message.channel.sendMessage(":thinking: **|** ${message.author.asMention} Insira uma imagem!").queue()
             }
@@ -39,13 +45,19 @@ class BackgroundCommand : AbstractCommand(
 
 
         if (args.isNotEmpty() && isValidUrl(args[0])) {
-            message.channel.sendMessage(":small_blue_diamond: **|** ${message.author.asMention} Background trocado com sucesso!").queue()
+            if (profile.money < 200) {
+                message.channel.sendMessage(":money_with_wings: **|** ${message.author.asMention} Você não tem Clyns suficientes!").queue()
+                return
+            }
 
+            profile.money -= 200
             profile.backgroundUrl = args[0]
             AxolotlHymnLauncher.hymn.usersColl.replaceOne(
                     Filters.eq("_id", message.author.id),
                     profile
             )
+
+            message.channel.sendMessage(":small_blue_diamond: **|** ${message.author.asMention} Background trocado com sucesso!\n:money_with_wings: **|** -200 Clyns!").queue()
         } else {
             message.channel.sendMessage(":thinking: **|** ${message.author.asMention} Insira uma imagem!").queue()
         }
