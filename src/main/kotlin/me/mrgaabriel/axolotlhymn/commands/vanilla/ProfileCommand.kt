@@ -4,9 +4,9 @@ import com.mongodb.client.model.*
 import me.mrgaabriel.axolotlhymn.*
 import me.mrgaabriel.axolotlhymn.bson.UserProfile
 import me.mrgaabriel.axolotlhymn.commands.*
+import me.mrgaabriel.axolotlhymn.utils.*
 import net.dv8tion.jda.core.*
 import net.dv8tion.jda.core.entities.*
-import java.awt.*
 
 class ProfileCommand : AbstractCommand(
         "profile",
@@ -34,8 +34,10 @@ class ProfileCommand : AbstractCommand(
                 Filters.eq("_id", user.id)
         ).firstOrNull() ?: UserProfile(user.id)
 
+        val color = HymnUtils.hexToColor(profile.favColor) ?: throw RuntimeException("Favcolor stored for user ${message.author.name} is not valid!")
+
         builder.apply {
-            setColor(Color(0, 255, 0))
+            setColor(color)
 
             setAuthor(user.name + "#" + user.discriminator, null, user.effectiveAvatarUrl)
 

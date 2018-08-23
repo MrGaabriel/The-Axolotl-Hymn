@@ -1,5 +1,6 @@
 package me.mrgaabriel.axolotlhymn.utils
 
+import java.awt.*
 import java.io.File
 import java.util.ArrayList
 import java.io.IOException
@@ -55,5 +56,19 @@ object HymnUtils {
             }
         }
         return classes
+    }
+
+    fun hexToColor(colorStr: String): Color? {
+        try {
+            val r = Integer.valueOf(colorStr.substring(1, 3), 16)
+            val g = Integer.valueOf(colorStr.substring(3, 5), 16)
+            val b = Integer.valueOf(colorStr.substring(5, 7), 16)
+
+            return Color(r, g, b)
+        } catch (e: NumberFormatException) {
+            return null
+        } catch (e: StringIndexOutOfBoundsException) {
+            return null
+        }
     }
 }
