@@ -15,6 +15,7 @@ class UserProfile @BsonCreator constructor(
     var lastUsedRep = 0.toLong()
 
     var money = 0
+    var lastDaily = 0.toLong()
 
     var favColor = "#99AAB5"
 
