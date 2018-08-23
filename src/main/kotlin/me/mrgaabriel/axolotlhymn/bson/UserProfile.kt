@@ -17,4 +17,6 @@ class UserProfile @BsonCreator constructor(
     var money = 0
 
     var about = "Eu sou uma pessoa legal! Sabia que você pode mudar este texto usando \"t!sobremim\"?"
+
+    var backgroundUrl = "https://cdn.discordapp.com/attachments/397295975175028736/480380805517017098/Sem_Titulo-1.png"
 }

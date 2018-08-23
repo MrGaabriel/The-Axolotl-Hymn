@@ -38,13 +38,16 @@ class ProfileCommand : AbstractCommand(
             setColor(Color(0, 255, 0))
 
             setAuthor(user.name + "#" + user.discriminator, null, user.effectiveAvatarUrl)
-            setTitle("${user.name} - Perfil")
+
+            setThumbnail(user.effectiveAvatarUrl)
+            setImage(profile.backgroundUrl)
 
             setDescription("`${profile.about}`")
 
             addField("XP", profile.xp.toString(), true)
             addField("Clyns", profile.money.toString(), true)
             addField("Reputação", profile.rep.toString(), true)
+            addField("Cargo", message.guild.getMember(user).roles.get(0).name, true)
         }
 
         message.channel.sendMessage(builder.build()).queue()
