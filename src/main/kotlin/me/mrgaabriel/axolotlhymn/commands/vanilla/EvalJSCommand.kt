@@ -7,7 +7,8 @@ import javax.script.*
 
 class EvalJSCommand : AbstractCommand(
         "evaljs",
-        "Executa códigos em JavaScript"
+        "Executa códigos em JavaScript",
+        hideInHelp = true
 ) {
 
     override fun run(message: Message, args: Array<String>) {

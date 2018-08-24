@@ -7,7 +7,8 @@ import org.slf4j.*
 abstract class AbstractCommand(val label: String,
                                val description: String = "Insira uma descrição aqui",
                                val usage: String = "",
-                               val aliases: List<String> = listOf()) {
+                               val aliases: List<String> = listOf(),
+                               val hideInHelp: Boolean = false) {
 
     val logger = LoggerFactory.getLogger(AbstractCommand::class.java)
 

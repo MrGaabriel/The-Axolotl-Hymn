@@ -10,7 +10,8 @@ import net.dv8tion.jda.core.entities.*
 import org.apache.commons.lang3.*
 
 class ManageCommand : AbstractCommand(
-        "manage"
+        "manage",
+        hideInHelp = true
 ) {
 
     override fun run(message: Message, args: Array<String>) {

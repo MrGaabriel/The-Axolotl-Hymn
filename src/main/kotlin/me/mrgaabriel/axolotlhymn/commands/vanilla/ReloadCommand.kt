@@ -12,7 +12,8 @@ import java.io.*
 class ReloadCommand : AbstractCommand(
         "reload",
         "Recarrega o bot",
-        "função"
+        "função",
+        hideInHelp = true
 ) {
 
     override fun run(message: Message, args: Array<String>) {
