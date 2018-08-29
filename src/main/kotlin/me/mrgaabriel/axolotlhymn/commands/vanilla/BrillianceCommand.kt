@@ -24,11 +24,16 @@ class BrillianceCommand : AbstractCommand(
         val brillianceOverlay = ImageIO.read(URL("https://cdn.discordapp.com/attachments/445378804685209601/483434324402896907/Modelo-Brilliance1.png"))
                 .resize(userAvatar.width, userAvatar.height, true)
 
+        graphics.font = Font.createFont(0, File("assets", "whitneyhtf-bold.otf")).deriveFont(16f)
+        graphics.color = Color(255, 255, 255)
+        graphics.drawString("Feito em Axolotl Blobs Hub", 10, 20)
+        graphics.drawString("https://discord.gg/USNQSt5", 10, 40)
+
         graphics.drawImage(brillianceOverlay, 0, 0, null)
 
         val baos = ByteArrayOutputStream()
         baos.use {
-            ImageIO.write(userAvatar, "png", it)
+            ImageIO.write(userAvatar.resize(512, 512, true), "png", it)
         }
 
         val inputStream = ByteArrayInputStream(baos.toByteArray())
