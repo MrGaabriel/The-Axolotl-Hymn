@@ -2,9 +2,15 @@ package me.mrgaabriel.axolotlhymn.utils
 
 import org.apache.commons.lang3.*
 import java.awt.*
-import java.io.File
-import java.util.ArrayList
-import java.io.IOException
+import java.awt.AlphaComposite
+import java.awt.RenderingHints
+import java.awt.geom.*
+import java.awt.image.*
+import java.io.*
+import java.net.*
+import java.util.*
+import javax.imageio.*
+
 
 object HymnUtils {
 
@@ -72,8 +78,83 @@ object HymnUtils {
             return null
         }
     }
+
+    fun getImageFromURL(link: String): BufferedImage {
+        val url = URL(link)
+
+        return ImageIO.read(url.openStream())
+    }
 }
 
 fun Array<String>.remove(idx: Int): Array<String> {
     return ArrayUtils.remove(this, idx)
+}
+
+fun BufferedImage.makeRoundedCorner(cornerRadius: Int): BufferedImage {
+    val w = this.width
+    val h = this.height
+    val output = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+
+    val g2 = output.createGraphics()
+
+    // This is what we want, but it only does hard-clipping, i.e. aliasing
+    // g2.setClip(new RoundRectangle2D ...)
+
+    // so instead fake soft-clipping by first drawing the desired clip shape
+    // in fully opaque white with antialiasing enabled...
+    g2.composite = AlphaComposite.Src
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.color = Color.WHITE
+    g2.fill(RoundRectangle2D.Float(0f, 0f, w.toFloat(), h.toFloat(), cornerRadius.toFloat(), cornerRadius.toFloat()))
+
+    // ... then compositing the image on top,
+    // using the white shape from above as alpha source
+    g2.composite = AlphaComposite.SrcAtop
+    g2.drawImage(this, 0, 0, null)
+
+    g2.dispose()
+
+    return output
+}
+
+fun Image.resize(width: Int, height: Int, maintainRatio: Boolean): BufferedImage {
+    //long startTime = getStartTime();
+
+    var outputWidth = width
+    var outputHeight = height
+
+    val _width = this.getWidth(null)
+    val _height = this.getHeight(null)
+
+    if (maintainRatio) {
+
+        var ratio = 0.0
+
+        if (width > height) {
+            ratio = width.toDouble() / _width.toDouble()
+        } else {
+            ratio = height.toDouble() / _height.toDouble()
+        }
+
+        val dw = width * ratio
+        val dh = height * ratio
+
+        outputWidth = Math.round(dw).toInt()
+        outputHeight = Math.round(dh).toInt()
+
+        if (outputWidth > width || outputHeight > height) {
+            outputWidth = width
+            outputHeight = height
+        }
+    }
+
+
+    //Resize the image (create new buffered image)
+    val outputImage = this.getScaledInstance(outputWidth, outputHeight, BufferedImage.TYPE_INT_ARGB)
+    val bi: BufferedImage? = BufferedImage(outputWidth, outputHeight, BufferedImage.TYPE_INT_ARGB)
+    val g2d: Graphics2D? = bi!!.createGraphics()
+    g2d!!.drawImage(outputImage, 0, 0, null)
+    g2d.dispose()
+
+    return bi
 }
