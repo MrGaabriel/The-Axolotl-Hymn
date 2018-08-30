@@ -16,12 +16,12 @@ class BrillianceCommand : AbstractCommand(
     override fun run(message: Message, args: Array<String>) {
         val user = if (message.mentionedUsers.isNotEmpty()) message.mentionedUsers.get(0) else message.author
 
-        val userAvatar = ImageIO.read(URL(user.effectiveAvatarUrl + "?size=1024")).makeRoundedCorner(1200)
+        val userAvatar = HymnUtils.getImageFromURL(user.effectiveAvatarUrl + "?size=1024").makeRoundedCorner(1200)
                 .resize(1024, 1024, true)
 
         val graphics = userAvatar.createGraphics()
 
-        val brillianceOverlay = ImageIO.read(URL("https://cdn.discordapp.com/attachments/445378804685209601/483434324402896907/Modelo-Brilliance1.png"))
+        val brillianceOverlay = HymnUtils.getImageFromURL("https://cdn.discordapp.com/attachments/445378804685209601/481548133487083522/Modelo-Brilliance.png")
                 .resize(userAvatar.width, userAvatar.height, true)
 
         graphics.font = Font.createFont(0, File("assets", "whitneyhtf-bold.otf")).deriveFont(16f)
@@ -33,7 +33,7 @@ class BrillianceCommand : AbstractCommand(
 
         val baos = ByteArrayOutputStream()
         baos.use {
-            ImageIO.write(userAvatar.resize(512, 512, true), "png", it)
+            ImageIO.write(userAvatar.resize(1024, 1024, true), "png", it)
         }
 
         val inputStream = ByteArrayInputStream(baos.toByteArray())

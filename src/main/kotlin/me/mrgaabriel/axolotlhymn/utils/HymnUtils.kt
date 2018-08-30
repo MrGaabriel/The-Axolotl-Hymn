@@ -81,8 +81,12 @@ object HymnUtils {
 
     fun getImageFromURL(link: String): BufferedImage {
         val url = URL(link)
+        val conn = url.openConnection()
 
-        return ImageIO.read(url.openStream())
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0")
+        conn.connect()
+
+        return ImageIO.read(conn.getInputStream())
     }
 }
 

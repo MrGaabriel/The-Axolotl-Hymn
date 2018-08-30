@@ -16,12 +16,12 @@ class BraveryCommand : AbstractCommand(
     override fun run(message: Message, args: Array<String>) {
         val user = if (message.mentionedUsers.isNotEmpty()) message.mentionedUsers.get(0) else message.author
 
-        val userAvatar = ImageIO.read(URL(user.effectiveAvatarUrl + "?size=512")).makeRoundedCorner(600)
+        val userAvatar = HymnUtils.getImageFromURL(user.effectiveAvatarUrl + "?size=512").makeRoundedCorner(600)
                 .resize(1024, 1024, true)
 
         val graphics = userAvatar.createGraphics()
 
-        val brillianceOverlay = ImageIO.read(URL("https://cdn.discordapp.com/attachments/445378804685209601/483434290651332608/Modelo-Bravery1.png"))
+        val brillianceOverlay = HymnUtils.getImageFromURL("https://cdn.discordapp.com/attachments/445378804685209601/481548236662767636/Modelo-Bravery.png")
                 .resize(1024, 1024, true)
 
         graphics.font = Font.createFont(0, File("assets", "whitneyhtf-bold.otf")).deriveFont(16f)
@@ -33,7 +33,7 @@ class BraveryCommand : AbstractCommand(
 
         val baos = ByteArrayOutputStream()
         baos.use {
-            ImageIO.write(userAvatar.resize(512, 512, true), "png", it)
+            ImageIO.write(userAvatar.resize(1024, 1024, true), "png", it)
         }
 
         val inputStream = ByteArrayInputStream(baos.toByteArray())
