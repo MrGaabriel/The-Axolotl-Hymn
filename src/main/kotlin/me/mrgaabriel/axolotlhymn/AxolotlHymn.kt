@@ -27,7 +27,7 @@ class AxolotlHymn(var config: HymnConfig) {
     var builder = JDABuilder(AccountType.BOT)
             .setToken(config.clientToken)
             .setStatus(OnlineStatus.DO_NOT_DISTURB)
-            .setGame(Game.streaming("Tommorrowland - (2019 - Winter) | t!help", "https://www.twitch.tv/MrGaabriel"))
+            .setGame(Game.streaming(config.clientToken))
             .setCorePoolSize(128)
             .addEventListener(MessageReceiver(this))
 
