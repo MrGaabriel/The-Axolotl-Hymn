@@ -27,43 +27,28 @@ class DivorceCommand : AbstractCommand(
             return
         }
 
-        hymn.jda.retrieveUserById(profile.marriedUser).queue({ user ->
-            if (user == null)
-                return@queue
+        val userProfile = hymn.usersColl.find(
+                Filters.eq("_id", profile.marriedUser)
+        ).firstOrNull() ?: UserProfile(profile.marriedUser)
 
-            user.openPrivateChannel().queue({ channel ->
-                channel.sendMessage(":broken_heart: **|** Seu parceiro, ${message.author.asMention} se divorciou de você!").queue({}, { e ->
-                    if (e is ErrorResponseException) {
-                        if (e.errorCode == 40002) {
-                            return@queue // :shrug:
-                        }
-                    }
-                })
+        profile.married = false
+        profile.marriedUser = ""
 
-                val userProfile = hymn.usersColl.find(
-                        Filters.eq("_id", profile.marriedUser)
-                ).firstOrNull() ?: UserProfile(profile.marriedUser)
+        userProfile.married = false
+        userProfile.marriedUser = ""
 
-                profile.married = false
-                profile.marriedUser = ""
+        hymn.usersColl.replaceOne(
+                Filters.eq("_id", message.author.id),
+                profile,
+                ReplaceOptions().upsert(true)
+        )
 
-                userProfile.married = false
-                userProfile.marriedUser = ""
+        hymn.usersColl.replaceOne(
+                Filters.eq("_id", userProfile.id),
+                userProfile,
+                ReplaceOptions().upsert(true)
+        )
 
-                hymn.usersColl.replaceOne(
-                        Filters.eq("_id", message.author.id),
-                        profile,
-                        ReplaceOptions().upsert(true)
-                )
-
-                hymn.usersColl.replaceOne(
-                        Filters.eq("_id", userProfile.id),
-                        userProfile,
-                        ReplaceOptions().upsert(true)
-                )
-
-                message.channel.sendMessage(":broken_heart: **|** ${message.author.asMention} Você se divorciou do usuário <@${userProfile.id}>").queue()
-            })
-        })
+        message.channel.sendMessage(":broken_heart: **|** ${message.author.asMention} Você se divorciou do usuário <@${userProfile.id}>").queue()
     }
 }
